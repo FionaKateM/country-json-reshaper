@@ -1,0 +1,46 @@
+import json
+
+# Imports the original JSON
+country_shapes_json = open('country_shapes.geojson')
+country_shapes = json.load(country_shapes_json)
+
+# initialises the main list in which the new country dictionaries will be appended
+new_country_shapes = []
+
+for i in country_shapes['features']:
+
+    # extracts only the information relevant to my project
+    iso3 = i['properties']['iso3']
+    country_name = i['properties']['cntry_name']
+    geo_point_lon = i['properties']['geo_point_2d']['lon']
+    geo_point_lat = i['properties']['geo_point_2d']['lat']
+
+    # Initialises the shapes list ready for each shape to be appended
+    shape_coordinates = []
+    
+    # Steps through each shape (there are multiple shapes where a country has multiple separated areas, for example Northern Ireland and the rest of the UK)
+    # Creates a list of shapes, each their own list of coordinates that create the path around the shape
+    for shape in i['geometry']['coordinates']:
+
+        new_shape = []
+        for coordinate in shape:
+            coord = {'x': coordinate[0], 'y': coordinate[1]}
+            new_shape.append(coord)
+
+        shape_coordinates.append(new_shape)
+
+
+    # creates a dictionary of the country details
+    country_dict = {
+        'iso3' : iso3,
+        'name' : country_name,
+        'coordinates' : {'x': geo_point_lat, 'y': geo_point_lon},
+        'shapes' : shape_coordinates
+    }   
+
+    # adds the country dict to the main list
+    new_country_shapes.append(country_dict)
+
+    # Saves the new structure as a json file
+with open('new_json', 'w') as fout:
+    json.dump(new_country_shapes, fout)
