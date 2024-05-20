@@ -1,0 +1,55 @@
+import json
+
+# Imports the original JSON
+country_shapes_json = open('country_shapes.geojson')
+country_shapes = json.load(country_shapes_json)
+
+country_name_list = []
+join_name_list = []
+iso2_2_list = []
+iso_a2_list = []
+iso2_list = []
+cou_iso3_code = []
+iso3 = []
+
+for country in country_shapes['features']:
+
+    properties = country['properties']
+    country_name_list.append(properties['cntry_name'])
+    join_name_list.append(properties['join_name'])
+    iso2_2_list.append(properties['iso2_2'])
+    iso_a2_list.append(properties['iso_a2'])
+    iso2_list.append(properties['iso2'])
+    cou_iso3_code.append(properties['cou_iso3_code'])
+    iso3.append(properties['iso3'])
+
+
+# print(len(country_name_list))
+# print(len(set(country_name_list)))
+
+# print(len(join_name_list))
+# print(len(set(join_name_list)))
+
+# iso2 is not useful as many are 'none'
+# print(iso2_2_list)
+# print(len(iso2_2_list))
+# print(len(set(iso2_2_list)))
+
+# Also a lot of these are NONE
+# print(iso_a2_list)
+# print(len(iso_a2_list))
+# print(len(set(iso_a2_list)))
+
+# A bit better but still some duplicates
+# print(iso2_list)
+# print(len(iso2_list))
+# print(len(set(iso2_list)))
+
+# some values are NA
+# print(cou_iso3_code)
+# print(len(cou_iso3_code))
+# print(len(set(cou_iso3_code)))
+
+print(iso3)
+print(len(iso3))
+print(len(set(iso3)))

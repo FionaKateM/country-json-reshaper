@@ -7,10 +7,12 @@ country_shapes = json.load(country_shapes_json)
 # initialises the main list in which the new country dictionaries will be appended
 new_country_shapes = []
 
+counter = 0
+
 for i in country_shapes['features']:
 
     # extracts only the information relevant to my project
-    iso3 = i['properties']['iso3']
+    # iso3 = i['properties']['iso3']
     country_name = i['properties']['cntry_name']
     geo_point_lon = i['properties']['geo_point_2d']['lon']
     geo_point_lat = i['properties']['geo_point_2d']['lat']
@@ -24,23 +26,55 @@ for i in country_shapes['features']:
 
         new_shape = []
         for coordinate in shape:
-            coord = {'x': coordinate[0], 'y': coordinate[1]}
-            new_shape.append(coord)
+            if len(coordinate) == 2:
+                coord = {'latitude': coordinate[0], 'longitude': coordinate[1]}
+                new_shape.append(coord)
+            else:
+                for nested_shape in coordinate:
+                    if len(nested_shape) == 2:
+                        coord = {'latitude': nested_shape[0], 'longitude': nested_shape[1]}
+                        new_shape.append(coord)
+                    else:
+                        print(iso3)
+                # if counter < 1:
+                #     print(iso3)
+                #     print(coordinate)
+                #     counter += 1
 
         shape_coordinates.append(new_shape)
 
 
     # creates a dictionary of the country details
     country_dict = {
-        'iso3' : iso3,
+        # 'iso3' : iso3,
         'name' : country_name,
-        'coordinates' : {'x': geo_point_lat, 'y': geo_point_lon},
+        'coordinates' : {'longitude': geo_point_lat, 'latitude': geo_point_lon},
         'shapes' : shape_coordinates
     }   
 
     # adds the country dict to the main list
     new_country_shapes.append(country_dict)
 
+
+
+
     # Saves the new structure as a json file
-with open('new_json', 'w') as fout:
-    json.dump(new_country_shapes, fout)
+# with open('new_json.json', 'w') as fout:
+#     json.dump(new_country_shapes, fout)
+
+# print(len(new_country_shapes))
+
+for country in new_country_shapes:
+    # print(country['name'])
+    # print(len(country['shapes']))
+
+    print(type(country['shapes']))
+
+
+
+    for shape in country['shapes']:
+        # print(type(shape))
+        for coord in shape:
+            print(type(coord))
+            if len(coord) != 2:
+                print("DOES NOT EQUAL 2")
